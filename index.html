@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space QR Code Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .space-bg {
+            background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle var(--twinkle-duration) ease-in-out infinite;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .cosmic-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(45deg, #4f46e5, #7c3aed);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .cosmic-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .cosmic-btn:hover::before {
+            left: 100%;
+        }
+
+        .cosmic-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        @keyframes cardFloat {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+            }
+            50% {
+                transform: translateY(-20px) rotate(2deg);
+            }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        .border-glow {
+            animation: borderGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes borderGlow {
+            0%, 100% {
+                box-shadow: 0 0 15px rgba(79, 70, 229, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 30px rgba(124, 58, 237, 0.5);
+            }
+        }
+
+        .qr-container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            transition: all 0.5s ease;
+        }
+
+        .qr-container img {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .qr-container:hover img {
+            transform: scale(1.05);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="space-bg min-h-screen font-['Poppins']">
+    <!-- Stars Background -->
+    <div id="stars" class="fixed inset-0 z-0"></div>
+
+    <!-- Main Content -->
+    <div class="relative min-h-screen flex items-center justify-center p-4 z-10">
+        <div class="glass-card w-full max-w-md p-8 rounded-2xl border-glow">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold font-['Orbitron'] bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent mb-2">
+                    CodewithAbhi
+                </h1>
+                <h2 class="text-2xl font-semibold text-white font-['Orbitron'] mt-4">QR Code Generator</h2>
+                <p class="text-blue-200 mt-2 text-sm">Enter text or URL to generate QR code</p>
+            </div>
+
+            <!-- Form -->
+            <div class="space-y-6">
+                <input type="text" id="qr-input" placeholder="Enter text or URL" spellcheck="false"
+                    class="input-field placeholder-blue-300/50">
+                
+                <div class="flex gap-4">
+                    <div class="w-1/2 relative group">
+                        <label class="absolute -top-6 left-0 text-xs text-blue-200">Background</label>
+                        <input type="color" value="#ffffff" title="Background Color"
+                            class="bg-color w-full h-12 rounded-lg cursor-pointer opacity-75 hover:opacity-100 transition-opacity">
+                    </div>
+                    <div class="w-1/2 relative group">
+                        <label class="absolute -top-6 left-0 text-xs text-blue-200">Foreground</label>
+                        <input type="color" value="#000000" title="Foreground Color"
+                            class="fg-color w-full h-12 rounded-lg cursor-pointer opacity-75 hover:opacity-100 transition-opacity">
+                    </div>
+                </div>
+
+                <button class="cosmic-btn w-full" id="generate-btn">
+                    Generate QR Code
+                </button>
+            </div>
+
+            <!-- QR Code Output -->
+            <div class="qr-code mt-8 flex flex-col items-center opacity-0 transition-all duration-500 space-y-4">
+                <div class="qr-container">
+                    <img src="" alt="qr-code" class="w-48 h-48">
+                </div>
+                <button class="cosmic-btn" id="download-btn">
+                    Download QR Code
+                </button>
+            </div>
+        </div>
+    </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
